@@ -1,0 +1,36 @@
+---
+# Create an instance on NeCTAR
+- name: Create an instance
+  openstack.cloud.server:
+    # auto_ip: false
+    availability_zone: "{{ availability_zone }}"
+    flavor: "{{ instance_flavor }}"
+    image: "{{ instance_image }}"
+    key_name: "{{ instance_key_name }}"
+    name: "{{ item.name }}"
+    network: "{{ instance_network }}"
+    security_groups: "{{ sg_names }}"
+    state: present
+    timeout: 600
+    volumes: "{{ item.volumes }}"
+    wait: yes
+  loop: "{{ instances }}"
+  register: os_instance
+
+- name: Print return information from the previous task
+  ansible.builtin.debug:
+    var: os_instance
+
+- ansible.builtin.debug:
+    msg: "Instance {{ item.server.name }} has been created. IP address is {{ item['server']['addresses'][instance_network][0]['addr'] }}"
+  loop: "{{ os_instance.results }}"
+  when: item.server is defined
+
+- name: Wait for connection
+  ansible.builtin.wait_for:
+    host: "{{ item['server']['addresses'][instance_network][0]['addr'] }}"
+    port: 22
+    timeout: 1800
+    search_regex: OpenSSH
+  loop: "{{ os_instance.results }}"
+  when: item.server is defined

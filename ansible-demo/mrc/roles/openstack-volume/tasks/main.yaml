@@ -1,0 +1,25 @@
+---
+# Create volumes from vars
+- name: Create volume(s) on NeCTAR
+  openstack.cloud.volume:
+    display_name: "{{ item.vol_name }}"
+    size: "{{ item.vol_size }}"
+    availability_zone: "{{ availability_zone }}"
+    wait: yes
+    timeout: 600
+    state: present
+  loop: "{{ volumes }}"
+  register: os_vol
+
+- name: Print return information from the previous task
+  ansible.builtin.debug:
+    var: os_vol
+
+# Get a list of volume Ids from the return value of os_volume
+- name: Create a list of volume Ids
+  ansible.builtin.set_fact:
+    os_vol_ids: "{{ os_vol_ids|default([]) + [ item.volume.id ] }}"
+  loop: "{{ os_vol.results }}"
+
+- ansible.builtin.debug:
+    msg: "Volume {{ os_vol_ids }} has been created."

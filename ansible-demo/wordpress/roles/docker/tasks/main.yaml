@@ -1,0 +1,42 @@
+---
+- name: Uninstall old versions of docker
+  become: yes
+  ansible.builtin.apt:
+    name: ['docker', 'docker-engine', 'docker.io']
+    state: absent
+
+- name: Install dependencies
+  become: yes
+  ansible.builtin.apt:
+    name: ['apt-transport-https', 'ca-certificates', 'curl', 'python-setuptools', 'software-properties-common']
+    state: latest
+    install_recommends: no
+    update_cache: yes
+
+- name: Add Docker apt repository key
+  become: yes
+  ansible.builtin.apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add Docker apt repository and update apt cache
+  become: yes
+  ansible.builtin.apt_repository:
+    repo: "deb https://download.docker.com/linux/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} stable"
+    mode: '644'
+    update_cache: yes
+    state: present
+
+- name: Install docker
+  become: yes
+  ansible.builtin.apt:
+    name: ['docker-ce', 'docker-ce-cli', 'containerd.io']
+    state: latest
+    install_recommends: no
+    update_cache: yes
+
+- name: Install docker-compose
+  become: yes
+  ansible.builtin.pip:
+    name: ['docker-compose']
+    state: latest

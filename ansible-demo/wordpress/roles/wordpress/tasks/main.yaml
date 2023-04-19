@@ -1,0 +1,26 @@
+---
+- name: Create Wordpress directory
+  become: yes
+  ansible.builtin.file:
+    path: "{{ wp_dir }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    recurse: yes
+    state: directory
+
+- name: Configure compose
+  become: yes
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ wp_dir }}/docker-compose.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
+- name: Run docker compose
+  become: yes
+  community.docker.docker_compose:
+    project_src: "{{ wp_dir }}"
+    pull: yes
+    state: present
+    remove_orphans: yes
+    recreate: always

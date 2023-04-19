@@ -1,0 +1,11 @@
+---
+# Create volume snapshot(s) (for demo only, you don't need this unless you want to)
+- name: Create volume snapshot(s)
+  openstack.cloud.volume_snapshot:
+    state: present
+    volume: "{{ item.vol_name }}"
+    display_name: "{{ item.vol_name }}-{{ lookup('pipe', 'date +%Y-%m-%d-%H-%M-%S') }}"
+    wait: yes
+    timeout: 600
+    force: yes
+  loop: "{{ volumes }}"

@@ -1,0 +1,21 @@
+- hosts: localhost
+  vars_files:
+    - host_vars/nectar.yaml
+  gather_facts: true
+
+  roles:
+    - role: openstack-common
+    - role: openstack-volume
+    - role: openstack-security-group
+    - role: openstack-instance
+
+- hosts: COMP90024
+  vars_files:
+    - host_vars/wordpress.yaml
+  gather_facts: true
+
+  roles:
+    - role: wp-common
+    - role: wp-volumes
+    - role: wp-docker
+    - role: wp-wordpress

@@ -1,0 +1,37 @@
+---
+- name: Gather facts of remote host
+  ansible.builtin.setup:
+    gather_subset: all
+
+- name: Install dependencies
+  tags: always
+  become: true
+  ansible.builtin.apt:
+    name:
+      [
+        "apt-transport-https",
+        "build-essential",
+        "ca-certificates",
+        "curl",
+        "git",
+        "gnupg",
+        "gnupg-agent",
+        "lsb-release",
+        "python3-dev",
+        "python3-pip",
+        "python3-setuptools",
+        "snapd",
+        "software-properties-common",
+        "unzip",
+        "vim",
+      ]
+    state: latest
+    install_recommends: false
+    update_cache: true
+
+- name: Update pip
+  tags: always
+  become: true
+  ansible.builtin.pip:
+    name: ["pip"]
+    state: latest

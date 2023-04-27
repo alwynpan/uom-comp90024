@@ -1,0 +1,46 @@
+---
+- name: Install dependencies
+  become: true
+  ansible.builtin.apt:
+    name: ["xfsprogs"]
+    state: latest
+    install_recommends: false
+    update_cache: true
+
+- name: Make file system
+  become: true
+  community.general.filesystem:
+    fstype: xfs
+    dev: "{{ item.device }}"
+  when: item.device is defined
+  with_items:
+    - "{{ volumes }}"
+
+- name: Checking folders
+  become: true
+  ansible.builtin.stat:
+    path: "{{ item.mountpoint }}"
+  register: directory_stats
+  with_items:
+    - "{{ volumes }}"
+
+- name: Create directory
+  become: true
+  ansible.builtin.file:
+    path: "{{ item.item.mountpoint }}"
+    recurse: true
+    state: directory
+  when: item.stat.exists == false
+  with_items:
+    - "{{ directory_stats.results }}"
+
+- name: Mount device
+  become: true
+  ansible.posix.mount:
+    path: "{{ item.mountpoint }}"
+    src: "{{ item.device }}"
+    fstype: xfs
+    state: mounted
+  when: item.device is defined
+  with_items:
+    - "{{ volumes }}"

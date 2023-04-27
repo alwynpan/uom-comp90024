@@ -3,16 +3,13 @@ availability_zone: melbourne-qh2-uom
 instance_image: bbaf16f8-2484-48d7-b455-42209cc4b8d2
 instance_key_name: id_rsa
 instance_flavor: uom.general.2c8g
+# instance_network: qh2-uom-internal
 
 # Volume
 volumes:
-  - vol_name: demo-vol-1-1
+  - vol_name: demo-03-vol-1
     vol_size: 10
-  - vol_name: demo-vol-1-2
-    vol_size: 10
-  - vol_name: demo-vol-2-1
-    vol_size: 10
-  - vol_name: demo-vol-2-2
+  - vol_name: demo-03-vol-2
     vol_size: 10
 
 # Security group
@@ -32,7 +29,5 @@ security_groups:
 
 # Instance
 instances:
-  - name: demo-1
-    volumes: ["demo-vol-1-1", "demo-vol-1-2"]
-  - name: demo-2
-    volumes: ["demo-vol-2-1", "demo-vol-2-2"]
+  - name: demo-03
+    volumes: ["demo-03-vol-1", "demo-03-vol-2"]

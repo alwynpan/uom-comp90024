@@ -11,6 +11,6 @@ echo ""
 read \?""
 echo "docker run --name demo2-2 -p 8081:80 -e WELCOME_STRING=\"COMP90024\" -d demo2"
 read \?""
-docker run --name demo2-2 -p 8081:80 -e WELCOME_STRING=COMP90024 -e TEST=hello -d demo2
+docker run --name demo2-2 -p 8081:80 -e WELCOME_STRING=COMP90024 -d demo2
 read \?""
 open -na "Google Chrome" --args --incognito "http://localhost:8081"

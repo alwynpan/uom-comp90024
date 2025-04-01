@@ -1,4 +1,3 @@
-version: '3.9'
 services:
   wordpress:
     image: wordpress:latest
@@ -15,7 +14,7 @@ services:
   #            -p 8080:80 -d --restart always wordpress
 
   db:
-    image: mysql:5.7
+    image: mysql:8
     restart: always
     environment:
       MYSQL_DATABASE: wordpress
@@ -23,13 +22,16 @@ services:
       MYSQL_PASSWORD: wordpress
       MYSQL_ROOT_PASSWORD: P@ssw0rd
     volumes:
-      - ./mysql:/var/lib/mysql
+      - type: bind
+        source: ./mysql
+        target: /var/lib/mysql
   # docker run -e MYSQL_DATABASE=wordpress -e MYSQL_USER=wordpress \
   #            -e MYSQL_PASSWORD=wordpress -e MYSQL_ROOT_PASSWORD=P@ssw0rd \
   #            -v $(pwd)/mysql:/var/lib/mysql \
   #            -d --restart always mysql:5.7
 
   phpmyadmin:
+    platform: linux/amd64
     image: phpmyadmin/phpmyadmin:latest
     restart: always
     ports:

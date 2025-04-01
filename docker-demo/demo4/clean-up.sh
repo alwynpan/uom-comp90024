@@ -1,13 +1,9 @@
 #!/usr/bin/env zsh
 
-docker service rm nginx
+echo "docker rm -f \$(docker ps -aq)"
 
-docker swarm leave
+docker rm -f $(docker ps -aq)
 
-docker swarm leave
-
-docker swarm leave --force
+docker rmi demo4:nginx
 
 clear
-
-docker node ls

@@ -1,6 +1,6 @@
 FROM nginx:latest
 
-ENV WELCOME_STRING "nginx in Docker"
+ENV WELCOME_STRING="nginx in Docker"
 
 WORKDIR /usr/share/nginx/html
 
